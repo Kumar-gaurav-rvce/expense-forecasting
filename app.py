@@ -1,14 +1,13 @@
+from prophet import Prophet
+from statsmodels.tsa.arima.model import ARIMA
+from botocore.exceptions import BotoCoreError, ClientError
 import streamlit as st
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import datetime
-import io
 import boto3
 import pickle
-from prophet import Prophet
-from statsmodels.tsa.arima.model import ARIMA
-from botocore.exceptions import BotoCoreError, ClientError
 import os
 
 st.set_page_config(page_title="Expense Forecasting App", layout="centered")
@@ -92,7 +91,7 @@ if input_method == "📂 Upload CSV":
             st.error("CSV must have 'Date' and 'Expense'")
             st.stop()
         df["date"] = pd.to_datetime(df["date"])
-        df = df.sort_values("date")
+        df = df.sort_values("date").dropna()
 
 elif input_method == "✏️ Enter Manually":
     months_back = st.slider("Months of past data:", 6, 24, 12)
@@ -109,7 +108,6 @@ if "df" in locals() and not df.empty:
     timestamp_str = datetime.datetime.utcnow().strftime("%Y%m%dT%H%M%SZ")
 
     if loaded_model:
-        # Determine type of model loaded
         if isinstance(loaded_model, Prophet):
             prophet_df = df.rename(columns={"date": "ds", "expense": "y"})
             future = loaded_model.make_future_dataframe(periods=periods, freq="M")
@@ -151,9 +149,20 @@ if "df" in locals() and not df.empty:
 
         else:
             df_arima = df.set_index("date")
-            model = ARIMA(df_arima['expense'], order=(2, 1, 2))
-            model_fit = model.fit()
-            forecast_values = model_fit.forecast(steps=periods)
+            # Handle small dataset by reducing ARIMA order
+            if len(df_arima) < 15:
+                order = (1, 1, 1)
+            else:
+                order = (2, 1, 2)
+
+            try:
+                model = ARIMA(df_arima['expense'], order=order)
+                model_fit = model.fit()
+                forecast_values = model_fit.forecast(steps=periods)
+            except Exception as e:
+                st.error(f"ARIMA failed: {e}")
+                st.stop()
+
             forecast_index = pd.date_range(df_arima.index[-1] + pd.Timedelta(days=30), periods=periods, freq='M')
             fig, ax = plt.subplots(figsize=(10, 5))
             ax.plot(df_arima.index, df_arima['expense'], label="Historical")
@@ -169,4 +178,3 @@ if "df" in locals() and not df.empty:
         upload_bytes_to_s3(csv_bytes, csv_key, "text/csv")
         upload_bytes_to_s3(model_bytes, pkl_key, "application/octet-stream")
         st.success(f"Saved forecast + model to S3 at {S3_PREFIX}")
-
