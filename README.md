@@ -27,6 +27,35 @@ with support for **AWS S3** storage of forecasts and trained models.
 
 ---
 
+## 📊 Model Comparison and Forecasting Behavior
+
+This app supports two forecasting models: **Prophet** and **ARIMA**, each with unique characteristics affecting their forecasts:
+
+- **Prophet**:
+  - Designed to handle seasonality (yearly, monthly, weekly) explicitly.
+  - Produces smooth month-by-month forecasts that repeat learned seasonal patterns.
+  - If recent monthly expenses are, for example, 5000, 6000, 7000, Prophet will forecast similar seasonal trends for the next year.
+  
+- **ARIMA**:
+  - Models statistical dependencies and trends in the data but does not explicitly handle seasonality unless extended to SARIMA.
+  - Can show steadily increasing or decreasing trends over time, which may appear as yearly trend growth.
+  - With limited data, ARIMA may extrapolate the underlying trend more aggressively, sometimes resulting in increasing forecast values even if recent data does not strongly suggest it.
+
+### Why the difference?
+
+Prophet explicitly models seasonality and holiday effects, leading to forecasts that mirror seasonal patterns.  
+ARIMA models the time series as an autoregressive process with differencing and moving average components, focusing more on trend and noise without direct seasonal modeling.
+
+### Tips to improve ARIMA forecasts:
+
+- Use SARIMA (seasonal ARIMA) if seasonality is present in the data.
+- Provide more historical data points for better parameter estimation.
+- Experiment with model order parameters or use automated order selection.
+- Apply data transformations (e.g., log transform) to stabilize variance.
+
+Understanding these differences helps choose the best model based on your expense data and forecasting goals.
+
+
 ## 📂 CSV Format
 
 Your input CSV **must** have two columns:  
