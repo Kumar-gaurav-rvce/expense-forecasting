@@ -84,8 +84,25 @@ Date,Expense
 
 ## ▶ Run Locally
 
-Run the app with:  
-`streamlit run app.py`
+1. To securely provide your AWS credentials and configuration for local development, follow these steps:
+
+   - Create a folder named `.streamlit` inside your project directory (`expense-forecasting`) if it doesn’t already exist.
+
+   - Inside the `.streamlit` folder, create a file named `secrets.toml`.
+
+   - Add your AWS secrets and configuration in the `secrets.toml` file as follows:
+
+   ```toml
+   AWS_ACCESS_KEY_ID = "your-access-key"
+   AWS_SECRET_ACCESS_KEY = "your-secret-key"
+   AWS_DEFAULT_REGION = "your-region"
+   S3_BUCKET = "your-bucket-name"
+   S3_PREFIX = "your/prefix/path"
+
+
+2. Run the app with:  
+```bash
+    streamlit run app.py
 
 ---
 
