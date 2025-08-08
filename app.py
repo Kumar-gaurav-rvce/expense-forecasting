@@ -19,8 +19,6 @@ import numpy as np
 # Matplotlib for plotting charts and visualizations
 import matplotlib.pyplot as plt  
 
-# datetime module for working with dates and times
-import datetime  
 
 # Boto3 SDK for interacting with AWS services (S3 in our case)
 import boto3  
@@ -34,7 +32,7 @@ import os
 # Importing 'datetime' and 'timezone' classes from the built-in datetime module.
 # - datetime: used to work with dates and times (e.g., current time, formatting timestamps).
 # - timezone: used to create timezone-aware datetime objects (important for UTC and avoiding deprecation warnings).
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 
 st.set_page_config(page_title="Expense Forecasting App", layout="centered")
 st.title("📈 Expense Forecasting with Model History (AWS S3)")
@@ -128,7 +126,7 @@ elif input_method == "✏️ Enter Manually":
     #   12  → Default value when the app loads (12 months).
     months_back = st.slider("Months of past data:", 6, 24, 12)
 
-    today = datetime.date.today()
+    today = date.today()
     dates = pd.date_range(end=today, periods=months_back, freq="M")
     expenses = [
         st.number_input(
