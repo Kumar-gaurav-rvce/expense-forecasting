@@ -98,6 +98,7 @@ Date,Expense
 2024-02-01,1500  
 2024-03-01,1000  
 2024-04-01,1800  
+2024-05-01,1300  
 
 Upload it via the **📂 Upload CSV** option in the app.
 
