@@ -133,8 +133,8 @@ elif input_method == "✏️ Enter Manually":
             f"{d.strftime('%B %Y')}",  # Label for input (e.g., "January 2025")
             0.0,                       # Minimum value allowed
             1000000.0,                  # Maximum value allowed
-            500.0,                     # Default value shown
-            step=10.0                  # Increment/decrement step
+            5000.0,                     # Default value shown
+            step=500.0                  # Increment/decrement step
         )
         for d in dates                 # Loop over every date in the 'dates' list
     ]
