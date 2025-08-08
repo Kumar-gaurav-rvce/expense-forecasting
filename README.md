@@ -101,7 +101,6 @@ Date,Expense
 
 
 2. Run the app with:  
-```bash
     streamlit run app.py
 
 ---
