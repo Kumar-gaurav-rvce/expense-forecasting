@@ -330,7 +330,7 @@ if "df" in locals() and not df.empty:
             # x-axis: future dates generated in forecast_index
             # y-axis: predicted expense values from ARIMA model
             # color: red to visually distinguish from historical data
-            # label: used for the legend to identify this line as "Forecast"
+            # label: used for the legend to identify this line as "Forecast".
             ax.plot(forecast_index, forecast_values, color="red", label="Forecast")
 
             # Display the legend so users can differentiate between historical and forecast lines
